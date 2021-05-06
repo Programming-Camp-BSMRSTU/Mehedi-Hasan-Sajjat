@@ -1,7 +1,7 @@
 /*---------------------------------------
    BISMILLAHIR RAHMANIR RAHIM
    AUTHOR : Md. Sajjat Hossen
-   TIME : 29-April,2021 10:52:45 PM
+   TIME : 29-April,2021 08:50:57 AM
 ----------------------------------------*/
 
 #include <bits/stdc++.h>
@@ -27,10 +27,9 @@ inline ll Long() { ll x; scanf("%lld", &x); return x; }
 int dx[8] = { 0, -1, 0, 1, -1, -1, 1, 1 };
 int dy[8] = { -1, 0, 1, 0, -1, 1, 1, -1 };
 
-const int N       = (int) 2e5 + 5;
+const int N       = (int) 1e3 + 5;
 const int mxN     = (int) 1e6 + 6;
 const int MOD     = (int) 1e9 + 7;
-const int INF     = (int) 1e9 + 9;
 const double EPS  = (double) 1e-9;
 
 #define    debug(x)    cerr << #x << " = " << x << '\n';
@@ -51,30 +50,32 @@ inline int mult(int a, int b, int mod) { return (ll) a * b % mod; }
 template <TN T> T gcd(T a, T b) { return !b ? a : gcd(b, a % b); }
 template <TN T> T lcm(T a, T b) { return a * (b / gcd(a, b)); }
 
-int dp[N], coin[N];
-int n;
+bool dp[N][N], vis[N][N];
+int w[N];
 
+bool fun(int x, int n) {
+    if (x == 0) return 1;
+    if (n == 0 || x < 0) return 0;
+    if (vis[x][n]) return dp[x][n];
+    vis[x][n] = 1;
+    dp[x][n] = fun(x - w[n], n - 1) | fun(x, n - 1);
+    return dp[x][n];
+}
 
 int main() {
     // Fast_IO
     // clock_t tStart = clock();
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
-    int test = 1, tc = 0;
+    int test = Int(), tc = 0;
     while (test--) {
-        for (int i = 1; i <= N; ++i) dp[i] = INF;
-        n = Int();
-        for (int i = 1; i <= n; ++i) coin[i] = Int();
+        memset(dp, 0, sizeof dp);
+        memset(vis, 0, sizeof vis);
+        int n = Int();
+        for (int i = 1; i <= n; ++i) w[i] = Int();
         int x = Int();
-        dp[0] = 0;
-        for (int i = 1; i <= x; ++i) {
-            for (int c = 1; c <= n; ++c) {
-                if (i >= coin[c]) {
-                    dp[i] = min(dp[i], dp[i - coin[c]] + 1);
-                }
-            }
-        }
-        printf("%d\n", dp[x]);
+        if (fun(x, n)) printf("Possible\n");
+        else printf("Impossible\n");
     }
     // fprintf(stderr, "\nRuntime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC);
     return 0;

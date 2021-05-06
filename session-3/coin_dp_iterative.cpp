@@ -54,6 +54,17 @@ template <TN T> T lcm(T a, T b) { return a * (b / gcd(a, b)); }
 int dp[N], coin[N];
 int n;
 
+int fun(int x) {
+    if (x == 0) return 0;
+    if (x < 0) return INF;
+    int &res = dp[x];
+    if (res != -1) return res;
+    res = INF;
+    for (int i = 1; i <= n; ++i) {
+        res = min(res, fun(x - coin[i]) + 1);
+    }
+    return res;
+}
 
 int main() {
     // Fast_IO
@@ -62,19 +73,11 @@ int main() {
     // freopen("output.txt", "w", stdout);
     int test = 1, tc = 0;
     while (test--) {
-        for (int i = 1; i <= N; ++i) dp[i] = INF;
+        memset(dp, -1, sizeof dp);
         n = Int();
         for (int i = 1; i <= n; ++i) coin[i] = Int();
         int x = Int();
-        dp[0] = 0;
-        for (int i = 1; i <= x; ++i) {
-            for (int c = 1; c <= n; ++c) {
-                if (i >= coin[c]) {
-                    dp[i] = min(dp[i], dp[i - coin[c]] + 1);
-                }
-            }
-        }
-        printf("%d\n", dp[x]);
+        printf("%d\n", fun(x));
     }
     // fprintf(stderr, "\nRuntime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC);
     return 0;

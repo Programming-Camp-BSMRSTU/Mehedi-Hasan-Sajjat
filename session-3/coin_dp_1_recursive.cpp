@@ -62,15 +62,15 @@ int main() {
     // freopen("output.txt", "w", stdout);
     int test = 1, tc = 0;
     while (test--) {
-        for (int i = 1; i <= N; ++i) dp[i] = INF;
+        for (int i = 1; i <= N; ++i) dp[i] = 0;
         n = Int();
         for (int i = 1; i <= n; ++i) coin[i] = Int();
         int x = Int();
-        dp[0] = 0;
+        dp[0] = 1;
         for (int i = 1; i <= x; ++i) {
             for (int c = 1; c <= n; ++c) {
                 if (i >= coin[c]) {
-                    dp[i] = min(dp[i], dp[i - coin[c]] + 1);
+                    dp[i] += dp[i - coin[c]];
                 }
             }
         }

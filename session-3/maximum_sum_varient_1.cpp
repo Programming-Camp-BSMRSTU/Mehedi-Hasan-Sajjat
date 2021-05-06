@@ -1,7 +1,7 @@
 /*---------------------------------------
    BISMILLAHIR RAHMANIR RAHIM
    AUTHOR : Md. Sajjat Hossen
-   TIME : 29-April,2021 10:52:45 PM
+   TIME : 29-April,2021 08:28:49 AM
 ----------------------------------------*/
 
 #include <bits/stdc++.h>
@@ -30,7 +30,6 @@ int dy[8] = { -1, 0, 1, 0, -1, 1, 1, -1 };
 const int N       = (int) 2e5 + 5;
 const int mxN     = (int) 1e6 + 6;
 const int MOD     = (int) 1e9 + 7;
-const int INF     = (int) 1e9 + 9;
 const double EPS  = (double) 1e-9;
 
 #define    debug(x)    cerr << #x << " = " << x << '\n';
@@ -51,9 +50,7 @@ inline int mult(int a, int b, int mod) { return (ll) a * b % mod; }
 template <TN T> T gcd(T a, T b) { return !b ? a : gcd(b, a % b); }
 template <TN T> T lcm(T a, T b) { return a * (b / gcd(a, b)); }
 
-int dp[N], coin[N];
-int n;
-
+// minimizing sum (variant 1)
 
 int main() {
     // Fast_IO
@@ -62,19 +59,20 @@ int main() {
     // freopen("output.txt", "w", stdout);
     int test = 1, tc = 0;
     while (test--) {
-        for (int i = 1; i <= N; ++i) dp[i] = INF;
-        n = Int();
-        for (int i = 1; i <= n; ++i) coin[i] = Int();
-        int x = Int();
-        dp[0] = 0;
-        for (int i = 1; i <= x; ++i) {
-            for (int c = 1; c <= n; ++c) {
-                if (i >= coin[c]) {
-                    dp[i] = min(dp[i], dp[i - coin[c]] + 1);
-                }
-            }
+        int n = Int(), x;
+        int ar[n + 2];
+        for (int i = 1; i <= n; ++i) ar[i] = Int();
+        sort(ar + 1, ar + n + 1);
+        if (n & 1) {
+            x = ar[n / 2];
+        } else {
+            x = (ar[n / 2] + ar[(n / 2) + 1]) / 2;
         }
-        printf("%d\n", dp[x]);
+        int res = 0;
+        for (int i = 1; i <= n; ++i) {
+            res += abs(ar[i] - x);
+        }
+        printf("%d\n", res);
     }
     // fprintf(stderr, "\nRuntime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC);
     return 0;

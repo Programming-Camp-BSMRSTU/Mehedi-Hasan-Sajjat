@@ -1,7 +1,7 @@
 /*---------------------------------------
    BISMILLAHIR RAHMANIR RAHIM
    AUTHOR : Md. Sajjat Hossen
-   TIME : 29-April,2021 10:52:45 PM
+   TIME : 01-May,2021 09:32:29 PM
 ----------------------------------------*/
 
 #include <bits/stdc++.h>
@@ -30,7 +30,6 @@ int dy[8] = { -1, 0, 1, 0, -1, 1, 1, -1 };
 const int N       = (int) 2e5 + 5;
 const int mxN     = (int) 1e6 + 6;
 const int MOD     = (int) 1e9 + 7;
-const int INF     = (int) 1e9 + 9;
 const double EPS  = (double) 1e-9;
 
 #define    debug(x)    cerr << #x << " = " << x << '\n';
@@ -51,30 +50,68 @@ inline int mult(int a, int b, int mod) { return (ll) a * b % mod; }
 template <TN T> T gcd(T a, T b) { return !b ? a : gcd(b, a % b); }
 template <TN T> T lcm(T a, T b) { return a * (b / gcd(a, b)); }
 
-int dp[N], coin[N];
-int n;
+struct node {
+    node* edge[26];
+    int cntEnd = 0;
+    node() {
+        cntEnd = 0;
+        for (int i = 0; i < 26; ++i)
+            edge[i] = NULL;
+    } 
+} *root;
 
+void add(string& s) {
+    node* cur = root;
+    for (int i = 0; i < szof(s); ++i) {
+        int id = s[i] - 'a';
+        if (cur->edge[id] == NULL) {
+            cur->edge[id] = new node();
+        }
+        cur = cur->edge[id];
+    }
+    cur->cntEnd++;
+}
+
+int search(string& s) {
+    node* cur = root;
+    for (int i = 0; i < szof(s); ++i) {
+        int id = s[i] - 'a';
+        if (cur->edge[id] == NULL) return 0;
+        cur = cur->edge[id];
+    }
+    return cur->cntEnd;
+}
+
+void del(node* cur) {
+    for (int i = 0; i < 26; ++i) {
+        if (cur->edge[i] != NULL) del(cur->edge[i]);
+    }
+    delete(cur);
+}
 
 int main() {
-    // Fast_IO
+    Fast_IO
     // clock_t tStart = clock();
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     int test = 1, tc = 0;
+    cin >> test;
     while (test--) {
-        for (int i = 1; i <= N; ++i) dp[i] = INF;
-        n = Int();
-        for (int i = 1; i <= n; ++i) coin[i] = Int();
-        int x = Int();
-        dp[0] = 0;
-        for (int i = 1; i <= x; ++i) {
-            for (int c = 1; c <= n; ++c) {
-                if (i >= coin[c]) {
-                    dp[i] = min(dp[i], dp[i - coin[c]] + 1);
-                }
-            }
+        int n;
+        cin >> n;
+        string s;
+        root = new node();
+        for (int i = 1; i <= n; ++i) {
+            cin >> s;
+            add(s);
         }
-        printf("%d\n", dp[x]);
+        int q;
+        cin >> q;
+        while (q--) {
+            cin >> s;
+            cout << search(s) << nl;
+        }
+        del(root);
     }
     // fprintf(stderr, "\nRuntime: %.10fs\n", (double) (clock() - tStart) / CLOCKS_PER_SEC);
     return 0;
